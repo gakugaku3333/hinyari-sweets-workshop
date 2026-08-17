@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fireworks-workshop-v2';
+const CACHE_NAME = 'fireworks-workshop-v3';
 const APP_FILES = [
   './', './index.html', './manifest.webmanifest',
   './assets/fireworks-festival-bg.png', './assets/apple-touch-icon.png',
@@ -21,5 +21,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request)));
+  event.respondWith(fetch(event.request).then((response) => {
+    if (response.ok && event.request.url.startsWith(self.location.origin)) {
+      caches.open(CACHE_NAME).then((cache) => cache.put(event.request, response.clone()));
+    }
+    return response;
+  }).catch(() => caches.match(event.request)));
 });
