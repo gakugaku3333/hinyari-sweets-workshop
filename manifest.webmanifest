@@ -1,12 +1,12 @@
 {
-  "name": "ひんやりスイーツ工房",
-  "short_name": "スイーツ工房",
-  "description": "同じおやつを合体させて、オーロラパフェをつくるパズルゲーム",
+  "name": "わくわく花火工房",
+  "short_name": "花火工房",
+  "description": "同じ花火を合体させて、夜空の大花火大会をひらくパズルゲーム",
   "lang": "ja",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#bfeeff",
-  "theme_color": "#bfeeff",
+  "background_color": "#101b50",
+  "theme_color": "#101b50",
   "icons": [
     { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }

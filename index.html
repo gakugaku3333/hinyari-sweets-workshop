@@ -3,71 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>ひんやりスイーツ工房</title>
-  <meta name="theme-color" content="#bfeeff">
+  <title>わくわく花火工房</title>
+  <meta name="theme-color" content="#101b50">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="スイーツ工房">
+  <meta name="apple-mobile-web-app-title" content="花火工房">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <style>
-    :root { --navy:#112447; --ink:#17345c; --cream:#fffdf7; --blue:#bdeeff; --pink:#ffc7df; }
+    :root { --navy:#101b50; --ink:#f4edff; --cream:#fffdf7; --blue:#314c9d; --pink:#ff8fc8; }
     * { box-sizing:border-box; }
-    body { margin:0; min-height:100svh; color:var(--ink); font-family:"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif; background:#bfeeff url("assets/sweets-workshop-bg.png") center top / cover fixed no-repeat; }
+    body { margin:0; min-height:100svh; color:var(--ink); font-family:"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif; background:#101b50 url("assets/fireworks-festival-bg.png") center top / cover fixed no-repeat; }
     button { font:inherit; cursor:pointer; }
-    .app { width:min(100%, 620px); min-height:100svh; margin:auto; padding:clamp(14px,3vw,26px); display:grid; align-content:start; gap:16px; background:linear-gradient(180deg,#ecfbffe8 0%,#f8fcfff0 72%,#edfbffdd 100%); box-shadow:0 0 42px #17447626; }
+    .app { width:min(100%, 620px); min-height:100svh; margin:auto; padding:clamp(14px,3vw,26px); display:grid; align-content:start; gap:16px; background:linear-gradient(180deg,#101b50e8 0%,#1d2361ed 72%,#111741e8 100%); box-shadow:0 0 42px #05081d99; }
     header { text-align:center; }
-    h1 { margin:0; font-size:clamp(29px,7vw,48px); letter-spacing:.06em; color:#155694; text-shadow:0 3px #fff; }
+    h1 { margin:0; font-size:clamp(29px,7vw,48px); letter-spacing:.06em; color:#ffe27b; text-shadow:0 3px #c44591,0 0 16px #ffb5d9; }
     .sub { margin:5px 0 0; font-size:14px; font-weight:700; }
     .status { display:grid; grid-template-columns:1fr 1fr auto; gap:9px; }
-    .badge { min-height:61px; padding:7px 10px; border-radius:16px; background:#fffdf7; box-shadow:0 4px 0 #9fc8df; text-align:center; font-weight:800; }
-    .badge small { display:block; font-size:11px; color:#5a79a3; } .badge strong { font-size:19px; }
-    .restart { border:0; border-radius:16px; padding:0 13px; color:#fff; background:#4c98d1; box-shadow:0 4px 0 #2a6fa8; font-weight:800; }
-    .restart:active { transform:translateY(3px); box-shadow:0 1px 0 #2a6fa8; }
-    .progress { padding:12px 14px; border-radius:18px; background:#ffffffc7; box-shadow:0 4px 0 #acd5e8; }
-    .progress-head { display:flex; justify-content:space-between; gap:8px; font-size:13px; font-weight:800; } .progress-head span:last-child { color:#e4538e; }
-    .track { height:10px; margin-top:8px; border-radius:99px; overflow:hidden; background:#d9edf5; } .fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,#6bd1ee,#fb82b6); transition:width .25s; }
-    .board { position:relative; aspect-ratio:1; padding:9px; display:grid; grid-template-columns:repeat(4,1fr); gap:9px; touch-action:none; border:8px solid #85c8dc; border-radius:28px; background:#bde6ef; box-shadow:inset 0 0 0 4px #e9fbff, 0 8px 0 #72abc3; }
-    .cell { min-width:0; border-radius:16px; background:#dff5f8; }
+    .badge { min-height:61px; padding:7px 10px; border-radius:16px; background:#fff9e9; box-shadow:0 4px 0 #85456e; text-align:center; font-weight:800; color:#26205a; }
+    .badge small { display:block; font-size:11px; color:#7c4a81; } .badge strong { font-size:19px; }
+    .restart { border:0; border-radius:16px; padding:0 13px; color:#fff; background:#df548f; box-shadow:0 4px 0 #94375f; font-weight:800; }
+    .restart:active { transform:translateY(3px); box-shadow:0 1px 0 #94375f; }
+    .progress { padding:12px 14px; border-radius:18px; background:#fff9e9e8; box-shadow:0 4px 0 #85456e; color:#26205a; }
+    .progress-head { display:flex; justify-content:space-between; gap:8px; font-size:13px; font-weight:800; } .progress-head span:last-child { color:#d33f7b; }
+    .track { height:10px; margin-top:8px; border-radius:99px; overflow:hidden; background:#d9d1ed; } .fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,#ffcc5c,#ff5ca8,#7edbff); transition:width .25s; }
+    .board { position:relative; aspect-ratio:1; padding:9px; display:grid; grid-template-columns:repeat(4,1fr); gap:9px; touch-action:none; border:8px solid #ffcd63; border-radius:28px; background:#2b2766; box-shadow:inset 0 0 0 4px #8466ba, 0 8px 0 #181343; }
+    .cell { min-width:0; border-radius:16px; background:#191b4b; }
     .tile-layer { position:absolute; z-index:2; inset:9px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(4,minmax(0,1fr)); gap:9px; pointer-events:none; }
     .tile { min-width:0; min-height:0; display:grid; place-items:center; padding:3px; border:3px solid #fff8; border-radius:16px; text-align:center; box-shadow:0 4px 0 #0002; transition:transform .14s ease; }
-    .tile .card-art { width:92%; height:68%; object-fit:contain; filter:drop-shadow(0 2px 1px #17447655); pointer-events:none; user-select:none; } .tile .name { font-size:clamp(8px,2.4vw,13px); font-weight:900; line-height:1.18; }
-    .tile[data-level="1"]{background:#fffef4}.tile[data-level="2"]{background:#bff0ff}.tile[data-level="3"]{background:#a9d9ff}.tile[data-level="4"]{background:#fff0ca}.tile[data-level="5"]{background:#ffd3dd}.tile[data-level="6"]{background:#bdeeff}.tile[data-level="7"]{background:#f8c4dc}.tile[data-level="8"]{background:#f7a9cf}.tile[data-level="9"]{background:#c6b2ff}.tile[data-level="10"]{background:linear-gradient(135deg,#ffb0e0,#a6edff,#fff59e); animation:shine 1s infinite alternate;}
+    .tile .card-art { width:92%; height:68%; object-fit:contain; filter:drop-shadow(0 2px 1px #17133d88); pointer-events:none; user-select:none; } .tile .name { font-size:clamp(8px,2.4vw,13px); font-weight:900; line-height:1.18; color:#211847; }
+    .tile[data-level="1"]{background:#fff1bc}.tile[data-level="2"]{background:#ffd4a5}.tile[data-level="3"]{background:#ffc4cc}.tile[data-level="4"]{background:#ffa9c9}.tile[data-level="5"]{background:#cdb7ff}.tile[data-level="6"]{background:#a5ddff}.tile[data-level="7"]{background:#ffcf70}.tile[data-level="8"]{background:#ff9dc1}.tile[data-level="9"]{background:#c8b1ff}.tile[data-level="10"]{background:linear-gradient(135deg,#ffcf5a,#ff85bd,#8dddff,#c8b0ff); animation:shine 1s infinite alternate;}
     @keyframes shine { to { filter:brightness(1.12); box-shadow:0 0 18px #fff,0 4px 0 #0002; } }
-    .message { min-height:28px; margin:0; text-align:center; font-weight:900; color:#d84b87; }
-    .help { display:grid; grid-template-columns:auto 1fr; align-items:center; gap:10px; padding:12px 14px; border-radius:18px; background:#fffdf7cf; font-size:13px; line-height:1.5; } .help b { font-size:25px; }
-    .palette { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; padding:8px; border-radius:16px; background:#ffffffa8; }
+    .message { min-height:28px; margin:0; text-align:center; font-weight:900; color:#ffe37d; text-shadow:0 1px #45215e; }
+    .help { display:grid; grid-template-columns:auto 1fr; align-items:center; gap:10px; padding:12px 14px; border-radius:18px; background:#fff9e9e8; color:#26205a; font-size:13px; line-height:1.5; } .help b { font-size:25px; }
+    .palette { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; padding:8px; border-radius:16px; background:#fff9e9e8; color:#26205a; }
     .mini { display:grid; justify-items:center; font-size:9px; font-weight:800; line-height:1.2; } .mini span { font-size:21px; }
-    .overlay { position:absolute; z-index:3; inset:0; display:none; place-items:center; padding:22px; border-radius:20px; background:#10234dcc; color:#fff; text-align:center; } .overlay.show { display:grid; } .overlay h2 { margin:0; font-size:32px; } .overlay p { margin:7px 0 15px; } .overlay button { border:0; border-radius:999px; padding:11px 22px; background:#fff; color:#23689f; font-weight:900; }
-    .splash { position:fixed; z-index:20; inset:0; display:grid; place-items:center; align-content:center; gap:18px; background:#bfeeff url("assets/sweets-workshop-bg.png") center / cover; color:#155694; text-align:center; transition:opacity .35s ease, visibility .35s; }
-    .splash::before { content:""; position:absolute; inset:0; background:#eefcff82; backdrop-filter:blur(2px); } .splash > * { position:relative; }
-    .splash img { width:116px; height:116px; border-radius:25%; box-shadow:0 8px 22px #17447655; } .splash h2 { margin:0; font-size:29px; text-shadow:0 2px #fff; } .splash p { margin:0; font-weight:800; }
+    .overlay { position:absolute; z-index:3; inset:0; display:none; place-items:center; padding:22px; border-radius:20px; background:#101238dd; color:#fff; text-align:center; } .overlay.show { display:grid; } .overlay h2 { margin:0; font-size:32px; } .overlay p { margin:7px 0 15px; } .overlay button { border:0; border-radius:999px; padding:11px 22px; background:#fff6d8; color:#742761; font-weight:900; }
+    .splash { position:fixed; z-index:20; inset:0; display:grid; place-items:center; align-content:center; gap:18px; background:#101b50 url("assets/fireworks-festival-bg.png") center / cover; color:#ffe27b; text-align:center; transition:opacity .35s ease, visibility .35s; }
+    .splash::before { content:""; position:absolute; inset:0; background:#10133a88; backdrop-filter:blur(2px); } .splash > * { position:relative; }
+    .splash img { width:116px; height:116px; border-radius:25%; box-shadow:0 8px 22px #050819aa; } .splash h2 { margin:0; font-size:29px; text-shadow:0 2px #c44691; } .splash p { margin:0; font-weight:800; }
     .splash.hide { opacity:0; visibility:hidden; pointer-events:none; }
   </style>
 </head>
 <body>
-  <section class="splash" id="splash" aria-label="ひんやりスイーツ工房を起動中"><img src="assets/icon-512.png" alt=""><h2>ひんやりスイーツ工房</h2><p>おいしい おやつを じゅんび中…</p></section>
+  <section class="splash" id="splash" aria-label="わくわく花火工房を起動中"><img src="assets/icon-512.png" alt=""><h2>わくわく花火工房</h2><p>きらきら花火を じゅんび中…</p></section>
   <main class="app">
-    <header><h1>ひんやりスイーツ工房</h1><p class="sub">同じおやつを合体させて、オーロラパフェをつくろう！</p></header>
-    <section class="status" aria-label="ゲーム状況"><div class="badge"><small>いちばん上の おやつ</small><strong id="best">ミルク</strong></div><div class="badge"><small>うごかした回数</small><strong id="moves">0</strong></div><button class="restart" id="restart" type="button">はじめから</button></section>
-    <section class="progress"><div class="progress-head"><span>オーロラパフェまで</span><span id="levelText">1 / 10</span></div><div class="track"><div class="fill" id="fill"></div></div></section>
-    <section class="board" id="board" aria-label="スワイプしておやつカードを動かすゲーム盤面"><div class="tile-layer" id="tileLayer" aria-hidden="true"></div><div class="overlay" id="overlay"><div><h2 id="overlayTitle"></h2><p id="overlayText"></p><button id="playAgain" type="button">もういちど あそぶ</button></div></div></section>
+    <header><h1>わくわく花火工房</h1><p class="sub">同じ花火を合体させて、夜空の大花火大会をひらこう！</p></header>
+    <section class="status" aria-label="ゲーム状況"><div class="badge"><small>いちばん上の 花火</small><strong id="best">線香花火</strong></div><div class="badge"><small>うごかした回数</small><strong id="moves">0</strong></div><button class="restart" id="restart" type="button">はじめから</button></section>
+    <section class="progress"><div class="progress-head"><span>大花火大会まで</span><span id="levelText">1 / 10</span></div><div class="track"><div class="fill" id="fill"></div></div></section>
+    <section class="board" id="board" aria-label="スワイプして花火カードを動かすゲーム盤面"><div class="tile-layer" id="tileLayer" aria-hidden="true"></div><div class="overlay" id="overlay"><div><h2 id="overlayTitle"></h2><p id="overlayText"></p><button id="playAgain" type="button">もういちど あそぶ</button></div></div></section>
     <p class="message" id="message" aria-live="polite">スワイプしてスタート！</p>
-    <section class="help"><b>👆</b><div>画面を<strong>スワイプ</strong>するか、キーボードの<strong>矢印キー</strong>で動かそう。<br>同じおやつがぶつかると、ひとつ上のごほうびおやつになるよ。</div></section>
-    <section class="palette" aria-label="おやつの進化"><div class="mini"><span>🥛</span>ミルク</div><div class="mini"><span>🍧</span>かき氷</div><div class="mini"><span>🍨</span>サンデー</div><div class="mini"><span>🍓</span>パフェ</div><div class="mini"><span>🌌</span>オーロラ<br>パフェ</div></section>
+    <section class="help"><b>👆</b><div>画面を<strong>スワイプ</strong>するか、キーボードの<strong>矢印キー</strong>で動かそう。<br>同じ花火がぶつかると、ひとつ上のすてきな花火になるよ。</div></section>
+    <section class="palette" aria-label="花火の進化"><div class="mini"><span>🎇</span>線香<br>花火</div><div class="mini"><span>🧨</span>ロケット<br>花火</div><div class="mini"><span>🎆</span>打ち上げ<br>花火</div><div class="mini"><span>✨</span>スターマ<br>イン</div><div class="mini"><span>🎉</span>大花火<br>大会</div></section>
   </main>
   <script>
-    const sweets = [null,['🥛','ミルク','assets/card-01.png'],['🍦','アイスキャンディー','assets/card-02.png'],['🍨','カップアイス','assets/card-03.png'],['🍦','ソフトクリーム','assets/card-04.png'],['🍧','フルーツシャーベット','assets/card-05.png'],['🍧','かき氷','assets/card-06.png'],['🍨','アイスサンデー','assets/card-07.png'],['🍓','ジャンボパフェ','assets/card-08.png'],['🏔️','アイスクリーム山','assets/card-09.png'],['🌌','オーロラパフェ','assets/card-10.png']];
+    const fireworks = [null,['🎇','線香花火','assets/card-01.png'],['✨','手持ち花火','assets/card-02.png'],['🧨','ロケット花火','assets/card-03.png'],['⛲','噴出花火','assets/card-04.png'],['🌀','回転花火','assets/card-05.png'],['🌈','変色花火','assets/card-06.png'],['🎆','打ち上げ花火','assets/card-07.png'],['💥','二尺玉','assets/card-08.png'],['🎇','連発スターマイン','assets/card-09.png'],['🎉','夜空の大花火大会','assets/card-10.png']];
     const boardEl = document.querySelector('#board'), tileLayerEl = document.querySelector('#tileLayer'), messageEl = document.querySelector('#message'), bestEl = document.querySelector('#best'), movesEl = document.querySelector('#moves'), fillEl = document.querySelector('#fill'), levelTextEl = document.querySelector('#levelText'), overlayEl = document.querySelector('#overlay');
     let grid, moves, won, start;
     const empty = () => [...Array(4)].flatMap((_,r)=>[0,1,2,3].map(c=>[r,c])).filter(([r,c])=>!grid[r][c]);
     function spawn() { const slots=empty(); if (!slots.length) return; const [r,c]=slots[Math.floor(Math.random()*slots.length)]; grid[r][c]=Math.random()<.82?1:2; }
     function reset() { grid=Array.from({length:4},()=>Array(4).fill(0)); moves=0; won=false; overlayEl.classList.remove('show'); spawn(); spawn(); render(); messageEl.textContent='スワイプしてスタート！'; }
     function lineMove(line) { const compact=line.filter(Boolean); const result=[]; let merged=false; for(let i=0;i<compact.length;i++){ if(compact[i]===compact[i+1]) { result.push(Math.min(10,compact[i]+1)); i++; merged=true; } else result.push(compact[i]); } while(result.length<4) result.push(0); return {line:result,merged}; }
-    function move(dir) { if(won) return; let changed=false, merged=false; for(let i=0;i<4;i++){ let line; if(dir==='left'||dir==='right') line=[...grid[i]]; else line=grid.map(row=>row[i]); const original=line.join(); const reverse=dir==='right'||dir==='down'; if(reverse) line.reverse(); const out=lineMove(line); if(reverse) out.line.reverse(); if(original!==out.line.join()) changed=true; merged ||= out.merged; if(dir==='left'||dir==='right') grid[i]=out.line; else out.line.forEach((v,r)=>grid[r][i]=v); } if(!changed) { messageEl.textContent='そっちは動けないよ'; return; } moves++; spawn(); const max=Math.max(...grid.flat()); if(max===10) { won=true; messageEl.textContent='オーロラパフェ完成！'; end('できあがり！','🌌 オーロラパフェが完成したよ！'); } else if(!empty().length && !canMove()) { end('おしまい','もう動かせないよ。もう一度チャレンジ！'); } else { messageEl.textContent=merged ? `${sweets[max][1]}にレベルアップ！` : 'おやつが1つふえたよ'; } render(); }
+    function move(dir) { if(won) return; let changed=false, merged=false; for(let i=0;i<4;i++){ let line; if(dir==='left'||dir==='right') line=[...grid[i]]; else line=grid.map(row=>row[i]); const original=line.join(); const reverse=dir==='right'||dir==='down'; if(reverse) line.reverse(); const out=lineMove(line); if(reverse) out.line.reverse(); if(original!==out.line.join()) changed=true; merged ||= out.merged; if(dir==='left'||dir==='right') grid[i]=out.line; else out.line.forEach((v,r)=>grid[r][i]=v); } if(!changed) { messageEl.textContent='そっちは動けないよ'; return; } moves++; spawn(); const max=Math.max(...grid.flat()); if(max===10) { won=true; messageEl.textContent='大花火大会、開幕！'; end('できあがり！','🎉 夜空の大花火大会がはじまったよ！'); } else if(!empty().length && !canMove()) { end('おしまい','もう動かせないよ。もう一度チャレンジ！'); } else { messageEl.textContent=merged ? `${fireworks[max][1]}にレベルアップ！` : '花火が1つふえたよ'; } render(); }
     function canMove(){ return grid.some((row,r)=>row.some((v,c)=>v&&((r<3&&v===grid[r+1][c])||(c<3&&v===row[c+1])))); }
     function end(title,text){ document.querySelector('#overlayTitle').textContent=title; document.querySelector('#overlayText').textContent=text; overlayEl.classList.add('show'); }
-    function render() { [...boardEl.querySelectorAll('.cell')].forEach(e=>e.remove()); tileLayerEl.replaceChildren(); for(let i=0;i<16;i++) boardEl.insertAdjacentHTML('afterbegin','<div class="cell"></div>'); const max=Math.max(...grid.flat()); bestEl.textContent=sweets[max][1]; movesEl.textContent=moves; fillEl.style.width=`${max/10*100}%`; levelTextEl.textContent=`${max} / 10`; grid.forEach((row,r)=>row.forEach((level,c)=>{ if(!level)return; const tile=document.createElement('div'); tile.className='tile'; tile.dataset.level=level; tile.style.gridColumn=String(c+1); tile.style.gridRow=String(r+1); tile.innerHTML=`<img class="card-art" src="${sweets[level][2]}?v=2" alt="${sweets[level][1]}"><span class="name">${level}<br>${sweets[level][1]}</span>`; tileLayerEl.append(tile); })); }
+    function render() { [...boardEl.querySelectorAll('.cell')].forEach(e=>e.remove()); tileLayerEl.replaceChildren(); for(let i=0;i<16;i++) boardEl.insertAdjacentHTML('afterbegin','<div class="cell"></div>'); const max=Math.max(...grid.flat()); bestEl.textContent=fireworks[max][1]; movesEl.textContent=moves; fillEl.style.width=`${max/10*100}%`; levelTextEl.textContent=`${max} / 10`; grid.forEach((row,r)=>row.forEach((level,c)=>{ if(!level)return; const tile=document.createElement('div'); tile.className='tile'; tile.dataset.level=level; tile.style.gridColumn=String(c+1); tile.style.gridRow=String(r+1); tile.innerHTML=`<img class="card-art" src="${fireworks[level][2]}?v=3" alt="${fireworks[level][1]}"><span class="name">${level}<br>${fireworks[level][1]}</span>`; tileLayerEl.append(tile); })); }
     let touchStart; boardEl.addEventListener('pointerdown',e=>{touchStart={x:e.clientX,y:e.clientY};}); boardEl.addEventListener('pointerup',e=>{if(!touchStart)return; const dx=e.clientX-touchStart.x,dy=e.clientY-touchStart.y; touchStart=null; if(Math.max(Math.abs(dx),Math.abs(dy))<25)return; move(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up'));});
     document.addEventListener('keydown',e=>{const d={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[e.key]; if(d){e.preventDefault();move(d);}}); document.querySelector('#restart').onclick=reset; document.querySelector('#playAgain').onclick=reset; reset();
     window.addEventListener('load',()=>setTimeout(()=>document.querySelector('#splash').classList.add('hide'),650));

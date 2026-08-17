@@ -1,7 +1,7 @@
-const CACHE_NAME = 'sweets-workshop-v1';
+const CACHE_NAME = 'fireworks-workshop-v2';
 const APP_FILES = [
   './', './index.html', './manifest.webmanifest',
-  './assets/sweets-workshop-bg.png', './assets/apple-touch-icon.png',
+  './assets/fireworks-festival-bg.png', './assets/apple-touch-icon.png',
   './assets/icon-192.png', './assets/icon-512.png',
   './assets/card-01.png', './assets/card-02.png', './assets/card-03.png',
   './assets/card-04.png', './assets/card-05.png', './assets/card-06.png',
