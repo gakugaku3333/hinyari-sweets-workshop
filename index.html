@@ -53,23 +53,61 @@
     <section class="progress"><div class="progress-head"><span>大花火大会まで</span><span id="levelText">1 / 10</span></div><div class="track"><div class="fill" id="fill"></div></div></section>
     <section class="board" id="board" aria-label="スワイプして花火カードを動かすゲーム盤面"><div class="tile-layer" id="tileLayer" aria-hidden="true"></div><div class="overlay" id="overlay"><div><h2 id="overlayTitle"></h2><p id="overlayText"></p><button id="playAgain" type="button">もういちど あそぶ</button></div></div></section>
     <p class="message" id="message" aria-live="polite">スワイプしてスタート！</p>
-    <section class="help"><b>👆</b><div>画面を<strong>スワイプ</strong>するか、キーボードの<strong>矢印キー</strong>で動かそう。<br>同じ花火がぶつかると、ひとつ上のすてきな花火になるよ。</div></section>
+    <section class="help"><b>👆</b><div>画面を<strong>スワイプ</strong>するか、キーボードの<strong>矢印キー</strong>で動かそう。<br>同じ花火がぶつかると、花火の音とともにひとつ上の花火になるよ。</div></section>
     <section class="palette" aria-label="花火の進化"><div class="mini"><span>🎇</span>線香<br>花火</div><div class="mini"><span>🧨</span>ロケット<br>花火</div><div class="mini"><span>🎆</span>打ち上げ<br>花火</div><div class="mini"><span>✨</span>スターマ<br>イン</div><div class="mini"><span>🎉</span>大花火<br>大会</div></section>
   </main>
   <script>
     const fireworks = [null,['🎇','線香花火','assets/card-01.png'],['✨','手持ち花火','assets/card-02.png'],['🧨','ロケット花火','assets/card-03.png'],['⛲','噴出花火','assets/card-04.png'],['🌀','回転花火','assets/card-05.png'],['🌈','変色花火','assets/card-06.png'],['🎆','打ち上げ花火','assets/card-07.png'],['💥','二尺玉','assets/card-08.png'],['🎇','連発スターマイン','assets/card-09.png'],['🎉','夜空の大花火大会','assets/card-10.png']];
     const boardEl = document.querySelector('#board'), tileLayerEl = document.querySelector('#tileLayer'), messageEl = document.querySelector('#message'), bestEl = document.querySelector('#best'), movesEl = document.querySelector('#moves'), fillEl = document.querySelector('#fill'), levelTextEl = document.querySelector('#levelText'), overlayEl = document.querySelector('#overlay');
     let grid, moves, won, start;
+    let audioCtx, audioOut;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return null;
+        audioCtx = new AudioContext();
+        const compressor=audioCtx.createDynamicsCompressor();
+        compressor.threshold.value=-18; compressor.knee.value=18; compressor.ratio.value=7; compressor.attack.value=.003; compressor.release.value=.3;
+        const master=audioCtx.createGain(); master.gain.value=1.25;
+        compressor.connect(master).connect(audioCtx.destination); audioOut=compressor;
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+    function noiseBurst(ctx, time, duration, volume, frequency) {
+      const frames=Math.ceil(ctx.sampleRate*duration), buffer=ctx.createBuffer(1,frames,ctx.sampleRate), data=buffer.getChannelData(0);
+      for(let i=0;i<frames;i++) data[i]=(Math.random()*2-1)*(1-i/frames);
+      const source=ctx.createBufferSource(), filter=ctx.createBiquadFilter(), gain=ctx.createGain();
+      source.buffer=buffer; filter.type=frequency<500?'lowpass':'bandpass'; filter.frequency.value=frequency; filter.Q.value=.7;
+      gain.gain.setValueAtTime(volume,time); gain.gain.exponentialRampToValueAtTime(.001,time+duration);
+      source.connect(filter).connect(gain).connect(audioOut); source.start(time); source.stop(time+duration);
+    }
+    function boomTone(ctx,time,power) {
+      const boom=ctx.createOscillator(), gain=ctx.createGain(); boom.type='sine'; boom.frequency.setValueAtTime(170,time); boom.frequency.exponentialRampToValueAtTime(48,time+.38); gain.gain.setValueAtTime(.12+power*.12,time); gain.gain.exponentialRampToValueAtTime(.001,time+.42); boom.connect(gain).connect(audioOut); boom.start(time); boom.stop(time+.43);
+    }
+    function sparkleTone(ctx,time,level) {
+      [0,1,2].forEach((i)=>{ const tone=ctx.createOscillator(), gain=ctx.createGain(); tone.type='triangle'; tone.frequency.value=900+level*90+i*430; gain.gain.setValueAtTime(.035,time+i*.035); gain.gain.exponentialRampToValueAtTime(.001,time+.16+i*.035); tone.connect(gain).connect(audioOut); tone.start(time+i*.035); tone.stop(time+.18+i*.035); });
+    }
+    function fireworkSound(level) {
+      const ctx=getAudioContext(); if(!ctx)return;
+      const now=ctx.currentTime+.015, power=Math.min(1,.22+level*.075), launch=level>=3;
+      if(launch){ const whistle=ctx.createOscillator(), whistleGain=ctx.createGain(); whistle.type='sawtooth'; whistle.frequency.setValueAtTime(170+level*12,now); whistle.frequency.exponentialRampToValueAtTime(760+level*42,now+.23); whistleGain.gain.setValueAtTime(.045,now); whistleGain.gain.exponentialRampToValueAtTime(.001,now+.24); whistle.connect(whistleGain).connect(audioOut); whistle.start(now); whistle.stop(now+.24); }
+      const boomTime=now+(launch ? .24 : .01); noiseBurst(ctx,boomTime,.12+level*.022,.07+power*.17,level>=7?210:850+level*140); boomTone(ctx,boomTime,power);
+      if(level>=4) sparkleTone(ctx,boomTime+.025,level);
+      const crackles=level<3?4:Math.min(15,4+level); for(let i=0;i<crackles;i++) noiseBurst(ctx,boomTime+.035+i*.022+Math.random()*.025,.045,.018+power*.018,2100+Math.random()*2900);
+      if(level>=7){ noiseBurst(ctx,boomTime+.05,.3,.07+power*.075,140); noiseBurst(ctx,boomTime+.12,.18,.04,520); }
+      if(level===10){ [0.23,.4,.58,.78,1.02].forEach((delay,i)=>{ const burstTime=boomTime+delay; noiseBurst(ctx,burstTime,.2,.13+i*.012,170+i*70); boomTone(ctx,burstTime,.8+i*.04); sparkleTone(ctx,burstTime+.02,8+i); for(let j=0;j<7;j++) noiseBurst(ctx,burstTime+.035+j*.022,.055,.026,2400+j*280); }); }
+    }
     const empty = () => [...Array(4)].flatMap((_,r)=>[0,1,2,3].map(c=>[r,c])).filter(([r,c])=>!grid[r][c]);
     function spawn() { const slots=empty(); if (!slots.length) return; const [r,c]=slots[Math.floor(Math.random()*slots.length)]; grid[r][c]=Math.random()<.82?1:2; }
     function reset() { grid=Array.from({length:4},()=>Array(4).fill(0)); moves=0; won=false; overlayEl.classList.remove('show'); spawn(); spawn(); render(); messageEl.textContent='スワイプしてスタート！'; }
-    function lineMove(line) { const compact=line.filter(Boolean); const result=[]; let merged=false; for(let i=0;i<compact.length;i++){ if(compact[i]===compact[i+1]) { result.push(Math.min(10,compact[i]+1)); i++; merged=true; } else result.push(compact[i]); } while(result.length<4) result.push(0); return {line:result,merged}; }
-    function move(dir) { if(won) return; let changed=false, merged=false; for(let i=0;i<4;i++){ let line; if(dir==='left'||dir==='right') line=[...grid[i]]; else line=grid.map(row=>row[i]); const original=line.join(); const reverse=dir==='right'||dir==='down'; if(reverse) line.reverse(); const out=lineMove(line); if(reverse) out.line.reverse(); if(original!==out.line.join()) changed=true; merged ||= out.merged; if(dir==='left'||dir==='right') grid[i]=out.line; else out.line.forEach((v,r)=>grid[r][i]=v); } if(!changed) { messageEl.textContent='そっちは動けないよ'; return; } moves++; spawn(); const max=Math.max(...grid.flat()); if(max===10) { won=true; messageEl.textContent='大花火大会、開幕！'; end('できあがり！','🎉 夜空の大花火大会がはじまったよ！'); } else if(!empty().length && !canMove()) { end('おしまい','もう動かせないよ。もう一度チャレンジ！'); } else { messageEl.textContent=merged ? `${fireworks[max][1]}にレベルアップ！` : '花火が1つふえたよ'; } render(); }
+    function lineMove(line) { const compact=line.filter(Boolean), result=[], mergedLevels=[]; for(let i=0;i<compact.length;i++){ if(compact[i]===compact[i+1]) { const next=Math.min(10,compact[i]+1); result.push(next); mergedLevels.push(next); i++; } else result.push(compact[i]); } while(result.length<4) result.push(0); return {line:result,mergedLevels}; }
+    function move(dir) { if(won) return; let changed=false, mergedLevels=[]; for(let i=0;i<4;i++){ let line; if(dir==='left'||dir==='right') line=[...grid[i]]; else line=grid.map(row=>row[i]); const original=line.join(); const reverse=dir==='right'||dir==='down'; if(reverse) line.reverse(); const out=lineMove(line); if(reverse) out.line.reverse(); if(original!==out.line.join()) changed=true; mergedLevels.push(...out.mergedLevels); if(dir==='left'||dir==='right') grid[i]=out.line; else out.line.forEach((v,r)=>grid[r][i]=v); } if(!changed) { messageEl.textContent='そっちは動けないよ'; return; } moves++; spawn(); const max=Math.max(...grid.flat()), mergedLevel=mergedLevels.length?Math.max(...mergedLevels):0; if(mergedLevel) fireworkSound(mergedLevel); if(max===10) { won=true; messageEl.textContent='大花火大会、開幕！'; end('できあがり！','🎉 夜空の大花火大会がはじまったよ！'); } else if(!empty().length && !canMove()) { end('おしまい','もう動かせないよ。もう一度チャレンジ！'); } else { messageEl.textContent=mergedLevel ? `${fireworks[mergedLevel][1]}にレベルアップ！` : '花火が1つふえたよ'; } render(); }
     function canMove(){ return grid.some((row,r)=>row.some((v,c)=>v&&((r<3&&v===grid[r+1][c])||(c<3&&v===row[c+1])))); }
     function end(title,text){ document.querySelector('#overlayTitle').textContent=title; document.querySelector('#overlayText').textContent=text; overlayEl.classList.add('show'); }
     function render() { [...boardEl.querySelectorAll('.cell')].forEach(e=>e.remove()); tileLayerEl.replaceChildren(); for(let i=0;i<16;i++) boardEl.insertAdjacentHTML('afterbegin','<div class="cell"></div>'); const max=Math.max(...grid.flat()); bestEl.textContent=fireworks[max][1]; movesEl.textContent=moves; fillEl.style.width=`${max/10*100}%`; levelTextEl.textContent=`${max} / 10`; grid.forEach((row,r)=>row.forEach((level,c)=>{ if(!level)return; const tile=document.createElement('div'); tile.className='tile'; tile.dataset.level=level; tile.style.gridColumn=String(c+1); tile.style.gridRow=String(r+1); tile.innerHTML=`<img class="card-art" src="${fireworks[level][2]}?v=3" alt="${fireworks[level][1]}"><span class="level">${level}</span><span class="name">${fireworks[level][1]}</span>`; tileLayerEl.append(tile); })); }
-    let touchStart; boardEl.addEventListener('pointerdown',e=>{touchStart={x:e.clientX,y:e.clientY};}); boardEl.addEventListener('pointerup',e=>{if(!touchStart)return; const dx=e.clientX-touchStart.x,dy=e.clientY-touchStart.y; touchStart=null; if(Math.max(Math.abs(dx),Math.abs(dy))<25)return; move(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up'));});
-    document.addEventListener('keydown',e=>{const d={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[e.key]; if(d){e.preventDefault();move(d);}}); document.querySelector('#restart').onclick=reset; document.querySelector('#playAgain').onclick=reset; reset();
+    let touchStart; boardEl.addEventListener('pointerdown',e=>{getAudioContext();touchStart={x:e.clientX,y:e.clientY};}); boardEl.addEventListener('pointerup',e=>{if(!touchStart)return; const dx=e.clientX-touchStart.x,dy=e.clientY-touchStart.y; touchStart=null; if(Math.max(Math.abs(dx),Math.abs(dy))<25)return; move(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up'));});
+    document.addEventListener('keydown',e=>{const d={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[e.key]; if(d){e.preventDefault();getAudioContext();move(d);}}); document.querySelector('#restart').onclick=reset; document.querySelector('#playAgain').onclick=reset; reset();
     window.addEventListener('load',()=>setTimeout(()=>document.querySelector('#splash').classList.add('hide'),650));
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(()=>{});
   </script>

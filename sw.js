@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fireworks-workshop-v3';
+const CACHE_NAME = 'fireworks-workshop-v4';
 const APP_FILES = [
   './', './index.html', './manifest.webmanifest',
   './assets/fireworks-festival-bg.png', './assets/apple-touch-icon.png',
